@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .row.content {
+            height: 1500px
+        }
+
+
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+
+            .row.content {
+                height: auto;
+            }
+        }
+
+        h1 {
+            font-weight: 200;
+            letter-spacing: 0.4px;
+            font-family: "Raleway", Sans-serif;
+            color: #232323;
+        }
+
+        h2 {
+            font-weight: 150;
+            letter-spacing: 0.4px;
+            font-family: "Raleway", Sans-serif;
+            color: #232323;
+        }
+
+        p {
+            font-weight: 50;
+            letter-spacing: 0.4px;
+            font-family: "Raleway", Sans-serif;
+            color: #232323;
+        }
+
+        .button {
+            background-color: #e7e7e7;
+            color: black;
+            border-radius: 12px;
+            color: black;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .alertsucess {
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .alerterror {
+            padding: 20px;
+            background-color: red;
+            color: white;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <h4>DASHBOARD</h4>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a onclick="openOperation(event,'R')">VIEW</a></li>
+                    <li class="active"><a onclick="openOperation(event,'C')">CREATE</a></li>
+                    <li class="active"><a onclick="openOperation(event,'U')">UPDATE</a></li>
+                    <li class="active"><a onclick="openOperation(event,'D')">DELETE</a></li>
+                </ul><br>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search Blog..">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+
+            <div id="R" class="tabcontent" style="display: none;">
+                <h3>VER DADOS</h3>
+                <form id="ver">
+
+                    <output type="text" id="tabelaverid" name ="tabelaprodutos">
+                        </output>
+                    </p>
+
+                    <table width="60%" align="center" style="visibility: hidden;" >
+                        <thead>
+                        </thead>
+                        <tbody id="tabelaver"></tbody>
+
+                    </table>
+
+                </form>
+            </div>
+
+            <div id="C" class="tabcontent" align="center" style="display: none;">
+                <form id="criar">
+                    <h1> Produtos </h1>
+                    <h2> Inserir Produtos </h2>
+                    <p>
+
+                        <label for="Produto">Produtos</label>
+                        <br>
+
+                        <select for="Produto" id="produtoid">
+                            <option>Escolha uma opção</option>
+                            <option value="T-shirt">T-shirt</option>
+                            <option value="Camisola">Camisola</option>
+                            <option value="Sweatshirt">Sweatshirt</option>
+                            <option value="Casaco">Casaco</option>
+                        </select>
+                    </p>
+
+                    <p>
+                        <div>
+                            <label for="tamanho">Tamanho</label>
+                            <br>
+                            <select for="Tamanho" id="tamanhoid">
+                                <option>Escolha uma opção</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+                    </p>
+
+                    <p>
+                        <div>
+                            <label for="cor">Cores Disponiveis</label><br>
+                            <select id="coresid" for="cor">
+                                <option>Escolha uma opção</option>
+                                <option value="Branco">Branco</option>
+                                <option value="Preto">Preto</option>
+                                <option value="Cinzento">Cinzento</option>
+                            </select>
+                        </div>
+                    </p>
+
+                    <p>
+                        <div>
+                            <label for="unidades">Unidades</label><br>
+                            <input type="texto" id="unidadesid" name="unidades">
+                        </div>
+                    </p>
+                </form>
+
+                <button Class="button" type="button" id="botao" style="vertical-align:middle"
+                    onclick="inserir_produto() "><span>Guardar</span></button>
+
+
+
+
+            </div>
+
+            <div id="U" class="tabcontent" style="display: none;">
+                <h3>ATUALIZAR DADOS</h3>
+            </div>
+
+            <div id="D" class="tabcontent" style="display: none;">
+                <h3>APAGAR DADOS</h3>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+
+    <footer class="container-fluid">
+        <p>Footer Text</p>
+    </footer>
+
+</body>
+
+</html>
+
+
+<!-- FIM DO HTML -->
+
+<!-- INICIO DO SCRIPT -->
+
+
+<script>
+    var apiR = require("./Api.js");
+
+    function openOperation(evt, cityName) {
+        verproduto();
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+
+    function inserir_produto() {
+        // apiR.send
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "http://localhost:8080/api/produtos", true);
+        xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                document.getElementById("mensagemsucesso").style.visibility = 'visible';
+            }
+        };
+
+        var dados = {}
+        dados.produto = criar.produtoid.value;
+        dados.tamanho = criar.tamanhoid.value;
+        dados.cores = criar.coresid.value;
+        dados.unidades = criar.unidadesid.value;
+
+
+
+        if (dados.produto == null || dados.tamanho == 0 || dados.cores == 0 || dados.unidades == 0) {
+            document.getElementById("mensagemerro").style.visibility = 'visible';
+
+            var close = document.getElementsByClassName("closebtn");
+            var i;
+            for (i = 0; i < close.length; i++) {
+                close[i].onclick = function () {
+                    var div = this.parentElement;
+                    div.style.opacity = "0";
+                    setTimeout(function () { div.style.display = "none"; }, 600);
+                }
+            }
+
+        } else {
+            var dadosemJSON = JSON.stringify(dados)
+            console.log("Dados:", dadosemJSON);
+            xhttp.send(dadosemJSON);
+
+            limparcampos();
+
+        }
+
+    }
+
+    function limparcampos() {
+        criar.produtoid.value = '';
+        criar.tamanhoid.value = '';
+        criar.coresid.value = '';
+        criar.unidadesid.value = '';
+    }
+
+    function verproduto(){
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "http://localhost:8080/api/produtos", true);
+
+        u = ver.tabelaverid.value;
+        xhttp.send(u);
+        
+        xhttp.onreadystatechange = function(){
+
+
+            if(this.readyState == 4 && this.status == 200 ){
+                
+                var arrayJSON = JSON.parse(this.responseText);
+                console.log(arrayJSON);
+
+                lines = "<table> <tr><th>PRODUTO</th><th>TAMANHO</th><th>CORES</th><th>UNIDADES</th></tr>";
+
+                    for(i=0;i<arrayJSON.data.length;i++){
+
+
+                        lines = lines + "<tr>";
+                        lines = lines + "<td>" + arrayJSON.data[i].produto + "</td>";
+                        lines = lines + "<td>" + arrayJSON.data[i].tamanho + "</td>";
+                        lines = lines + "<td>" + arrayJSON.data[i].cores + "</td>";
+                        lines = lines + "<td>" + arrayJSON.data[i].unidades + "</td>";
+                        lines = lines + "<tr>";
+             
+                    }
+
+                    lines = lines + "</table>";
+
+                    document.getElementById("tabelaver").innerHTML = lines;
+                    document.getElementById("tabelaver").style.visibility='visible';
+            }
+
+        }
+
+    }
+
+
+
+
+</script>
