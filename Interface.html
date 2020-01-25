@@ -74,6 +74,49 @@
             transition-duration: 0.4s;
             cursor: pointer;
         }
+        .buttonDelete {
+            background-color: red;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .buttonUpdate {
+            background-color:green;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .buttonExtract {
+            background-color:lightblue;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+
+
 
         .alertsucess {
             padding: 20px;
@@ -122,6 +165,7 @@
                     <li class="active"><a onclick="openOperation(event,'U')">UPDATE</a></li>
                     <li class="active"><a onclick="openOperation(event,'D')">DELETE</a></li>
                 </ul><br>
+                <!--APAGAR SE QUISEREM-->
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search Blog..">
                     <span class="input-group-btn">
@@ -130,6 +174,8 @@
                         </button>
                     </span>
                 </div>
+                 <!----------------------------------->
+
             </div>
 
 
@@ -137,11 +183,11 @@
                 <h3>VER DADOS</h3>
                 <form id="ver">
 
-                    <output type="text" id="tabelaverid" name ="tabelaprodutos">
-                        </output>
+                    <output type="text" id="tabelaverid" name="tabelaprodutos">
+                    </output>
                     </p>
 
-                    <table width="60%" align="center" style="visibility: hidden;" >
+                    <table width="60%" align="center" style="visibility: hidden;">
                         <thead>
                         </thead>
                         <tbody id="tabelaver"></tbody>
@@ -213,10 +259,78 @@
 
             <div id="U" class="tabcontent" style="display: none;">
                 <h3>ATUALIZAR DADOS</h3>
+
+                <form id="update">
+
+                    <output type="text" id="tabelaupdateid" name="tabelaprodutos">
+                    </output>
+                    </p>
+
+                    <table id="tableU" width="60%" align="center" style="visibility: hidden;">
+                        <thead>
+                        </thead>
+                        <tbody id="tabelaupdate"></tbody>
+
+                    </table>
+
+                </form>
+
+                <button Class="buttonExtract" type="button" id="botao" style="vertical-align:middle"
+                        onclick="get_id('tableU') "><span>EXTRAIR</span></button>
+
+                <form id="campos_Update">
+                    <div>
+                        <label for="produto">Produto</label><br>
+                        <input type="texto" id="produtoid" >
+                    </div>
+                    <div>
+                        <label for="tamanho">Tamanho</label><br>
+                        <input type="texto" id="tamanhoid" >
+                    </div>
+                    <div>
+                        <label for="cores">Cores</label><br>
+                        <input type="texto" id="coresid">
+                    </div>
+                    <div>
+                        <label for="unidades">Unidades</label><br>
+                        <input type="texto" id="unidadesid">
+                    </div>
+
+                    <button Class="buttonUpdate" type="button" id="botao" style="vertical-align:middle"
+                        onclick="update_produto() "><span>GUARDAR</span></button>
+
+                    
+                </form>
+
+
             </div>
+
+
 
             <div id="D" class="tabcontent" style="display: none;">
                 <h3>APAGAR DADOS</h3>
+                <form id="del">
+
+                    <output type="text" id="tabeladeleteid" name="tabelaprodutos">
+                    </output>
+                    </p>
+
+                    <table id="tableD" width="60%" align="center" style="visibility: hidden;">
+                        <thead>
+                        </thead>
+                        <tbody id="tabeladelete"></tbody>
+
+                    </table>
+                    <br>
+                    <br>
+
+                    <br>
+
+                    <button Class="buttonDelete" type="button" id="botao" align="center" style="vertical-align:middle"
+                        onclick="delete_produto() "><span>APAGAR</span></button>
+
+
+                </form>
             </div>
 
 
@@ -241,8 +355,9 @@
 <script>
     var apiR = require("./Api.js");
 
-    function openOperation(evt, cityName) {
+    function openOperation(evt, operationName) {
         verproduto();
+        viewtables()
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
@@ -252,7 +367,7 @@
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
-        document.getElementById(cityName).style.display = "block";
+        document.getElementById(operationName).style.display = "block";
         evt.currentTarget.className += " active";
     }
 
@@ -308,47 +423,181 @@
         criar.unidadesid.value = '';
     }
 
-    function verproduto(){
-
+    function verproduto() {
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", "http://localhost:8080/api/produtos", true);
 
         u = ver.tabelaverid.value;
         xhttp.send(u);
-        
-        xhttp.onreadystatechange = function(){
+
+        xhttp.onreadystatechange = function () {
 
 
-            if(this.readyState == 4 && this.status == 200 ){
-                
+            if (this.readyState == 4 && this.status == 200) {
+
                 var arrayJSON = JSON.parse(this.responseText);
                 console.log(arrayJSON);
 
                 lines = "<table> <tr><th>PRODUTO</th><th>TAMANHO</th><th>CORES</th><th>UNIDADES</th></tr>";
 
-                    for(i=0;i<arrayJSON.data.length;i++){
+                for (i = 0; i < arrayJSON.data.length; i++) {
 
 
-                        lines = lines + "<tr>";
-                        lines = lines + "<td>" + arrayJSON.data[i].produto + "</td>";
-                        lines = lines + "<td>" + arrayJSON.data[i].tamanho + "</td>";
-                        lines = lines + "<td>" + arrayJSON.data[i].cores + "</td>";
-                        lines = lines + "<td>" + arrayJSON.data[i].unidades + "</td>";
-                        lines = lines + "<tr>";
-             
-                    }
+                    lines = lines + "<tr>";
+                    lines = lines + "<td>" + arrayJSON.data[i].produto + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].tamanho + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].cores + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].unidades + "</td>";
+                    lines = lines + "<tr>";
 
-                    lines = lines + "</table>";
+                }
 
-                    document.getElementById("tabelaver").innerHTML = lines;
-                    document.getElementById("tabelaver").style.visibility='visible';
+                lines = lines + "</table>";
+
+                document.getElementById("tabelaver").innerHTML = lines;
+                document.getElementById("tabelaver").style.visibility = 'visible';
             }
 
         }
 
     }
 
+    function viewtables() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "http://localhost:8080/api/produtos", true);
+
+        u = update.tabelaupdateid.value;
+        xhttp.send(u);
+
+        xhttp.onreadystatechange = function () {
 
 
+            if (this.readyState == 4 && this.status == 200) {
+
+                var arrayJSON = JSON.parse(this.responseText);
+                console.log(arrayJSON);
+
+                lines = "<table> <tr> <th>SELECIONAR</th> <th>ID</th> <th>PRODUTO</th><th>TAMANHO</th><th>CORES</th><th>UNIDADES</th></tr>";
+
+                for (i = 0; i < arrayJSON.data.length; i++) {
+
+
+                    lines = lines + "<tr>";
+                    lines = lines + "<td><input type=\"checkbox\"></td>";
+                    lines = lines + "<td>" + arrayJSON.data[i]._id + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].produto + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].tamanho + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].cores + "</td>";
+                    lines = lines + "<td>" + arrayJSON.data[i].unidades + "</td>";
+                    lines = lines + "<tr>";
+
+                }
+
+                lines = lines + "</table>";
+
+                document.getElementById("tabelaupdate").innerHTML = lines;
+                document.getElementById("tabelaupdate").style.visibility = 'visible';
+
+                document.getElementById("tabeladelete").innerHTML = lines;
+                document.getElementById("tabeladelete").style.visibility = 'visible';
+
+            }
+
+        }
+
+    }
+
+    function delete_produto() {
+
+        var fid = get_id("tableD");
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", "http://localhost:8080/api/produtos/" + fid, true);
+
+        u = ver.tabelaverid.value;
+        xhttp.send(u);
+
+        xhttp.onreadystatechange = function () {
+
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                console.log(this.responseText)
+
+            }
+
+            viewtables();
+
+
+        }
+    }
+
+    function update_produto(){
+
+       u_produto = campos_Update.produtoid.value;
+       u_tamanho = campos_Update.tamanhoid.value;
+       u_cores = campos_Update.coresid.value;
+       u_unidades = campos_Update.unidadesid.value;
+
+
+
+       var corpo_mensagem = "produto="+u_produto+"&tamanho="+u_tamanho+"&cores="+u_cores+"&unidades="+u_unidades;
+
+
+        var fid = get_id("tableU");
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("PUT", "http://localhost:8080/api/produtos/" + fid, true);
+        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        console.log(corpo_mensagem);
+        xhttp.send(corpo_mensagem);
+
+        xhttp.onreadystatechange = function () {
+
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                console.log(this.responseText)
+
+            }
+
+            viewtables();
+
+
+        }
+
+
+    }
+
+    function get_id(tableid) {
+
+        var dadostabela = document.getElementById(tableid);
+
+        var checkbox = dadostabela.getElementsByTagName("INPUT");
+
+        var dados = [];
+
+
+        for (i = 0; i < checkbox.length; i++) {
+            if (checkbox[i].checked) {
+                var linha = checkbox[i].parentNode.parentNode;
+                dados[0] = linha.cells[1].innerHTML; //id
+                dados[1] = linha.cells[2].innerHTML; //produto
+                dados[2] = linha.cells[3].innerHTML;
+                dados[3] = linha.cells[4].innerHTML;
+                dados[4] = linha.cells[5].innerHTML;//Unidades
+            }
+
+
+        }
+
+        campos_Update.produtoid.value = dados[1];
+        campos_Update.tamanhoid.value = dados[2];
+        campos_Update.coresid.value = dados[3];
+        campos_Update.unidadesid.value = dados[4];
+
+        return dados[0];
+
+
+
+    }
 
 </script>
